@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Enquetes - Professor</title>
+    <title>Sistema de Enquetes</title>
     <style>
         * {
             margin: 0;
@@ -148,15 +148,6 @@
             background: #616161;
         }
 
-        .btn-warning {
-            background: #f57c00;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #e65100;
-        }
-
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -284,6 +275,14 @@
             border: 1px solid #f5c6cb;
         }
 
+        .aviso-aluno {
+            background: #e3f2fd;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1a237e;
+        }
+
         @media (max-width: 600px) {
             .card {
                 padding: 20px;
@@ -326,6 +325,8 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
+            flex: 1;
+            text-align: center;
         }
 
         .tab.active {
@@ -337,10 +338,18 @@
             transform: translateY(-2px);
         }
 
-        .tab:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
+        .tab-aluno {
+            background: #4caf50;
+            color: white;
+        }
+
+        .tab-aluno:hover {
+            background: #388e3c;
+        }
+
+        .tab-aluno.active {
+            background: #1a237e;
+            color: white;
         }
 
         .panel {
@@ -359,10 +368,14 @@
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.7);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+        }
+
+        .login-overlay.show {
+            display: flex;
         }
 
         .login-box {
@@ -405,10 +418,21 @@
             margin-top: 10px;
             display: none;
         }
+
+        .login-close {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .login-close:hover {
+            color: #1a237e;
+        }
     </style>
 </head>
 <body>
-    <!-- TELA DE LOGIN DO PROFESSOR -->
+    <!-- TELA DE LOGIN (SÓ APARECE QUANDO CLICA EM PROFESSOR) -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
             <h2>🔒 Acesso do Professor</h2>
@@ -416,19 +440,63 @@
             <input type="password" id="senhaInput" placeholder="Digite a senha..." onkeypress="if(event.key==='Enter') loginProfessor()">
             <button class="btn btn-primary" onclick="loginProfessor()">Entrar</button>
             <div id="loginError" class="login-error">❌ Senha incorreta! Tente novamente.</div>
-            <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #999;">Dica: A senha padrão é <strong>professor2024</strong></p>
+            <div class="login-close" onclick="fecharLogin()">✕ Voltar para o modo Aluno</div>
+            <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #999;">Senha padrão: <strong>professor2024</strong></p>
         </div>
     </div>
 
     <div class="container">
         <!-- TABS -->
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('professor')" id="tabProfessor">👨‍🏫 Professor</button>
-            <button class="tab" onclick="switchTab('aluno')" id="tabAluno">🎓 Aluno</button>
+            <button class="tab tab-aluno active" id="tabAluno" onclick="abrirAba('aluno')">🎓 Aluno</button>
+            <button class="tab" id="tabProfessor" onclick="abrirAba('professor')">👨‍🏫 Professor 🔒</button>
+        </div>
+
+        <!-- PAINEL DO ALUNO (SEMPRE VISÍVEL) -->
+        <div id="alunoPanel" class="panel active">
+            <div class="card">
+                <div class="card-header">
+                    <h2>🎓 Enquete - Alunos</h2>
+                    <span class="badge" id="studentCounter">Questão 1/10</span>
+                </div>
+                
+                <div class="aviso-aluno">
+                    ℹ️ <strong>Modo Aluno:</strong> Seu voto é anônimo e você só pode votar uma vez por questão.
+                </div>
+                
+                <div id="studentQuestion">
+                    <div class="question-text" id="studentQuestionText">Carregando questão...</div>
+                    
+                    <div class="options" id="studentOptions"></div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="voteBtn" onclick="votar()">🗳️ Votar</button>
+                    </div>
+                    
+                    <div id="voteMessage" style="margin-top: 15px; display: none;"></div>
+                    
+                    <div id="studentResults" class="results" style="margin-top: 20px;">
+                        <div style="background: #e3f2fd; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                            <p style="color: #1a237e; font-weight: 500;">📊 Resultados Parciais</p>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-box">
+                                <div class="number" id="studentTotalVotes">0</div>
+                                <div class="label">Total de Votos</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="number" id="studentAccuracy">0%</div>
+                                <div class="label">Taxa de Acerto</div>
+                            </div>
+                        </div>
+                        <div id="studentResultsList"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- PAINEL DO PROFESSOR -->
-        <div id="professorPanel" class="panel active">
+        <div id="professorPanel" class="panel">
             <div class="card">
                 <div class="card-header">
                     <h2>👨‍🏫 Painel do Professor</h2>
@@ -441,9 +509,10 @@
                     <div class="options" id="optionsContainer"></div>
                     
                     <div class="button-group">
-                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Próxima Questão →</button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="proximaQuestao()">Próxima Questão →</button>
                         <button class="btn btn-success" id="showResultsBtn" onclick="toggleResults()">📊 Mostrar Resultados</button>
-                        <button class="btn btn-danger" onclick="resetAll()">🔄 Reiniciar Tudo</button>
+                        <button class="btn btn-danger" onclick="reiniciarTudo()">🔄 Reiniciar Tudo</button>
+                        <button class="btn btn-secondary" onclick="logoutProfessor()">🚪 Sair</button>
                     </div>
                 </div>
                 
@@ -472,47 +541,8 @@
                     <div id="resultsList"></div>
                     
                     <div class="button-group">
-                        <button class="btn btn-primary" onclick="nextQuestion()">Próxima Questão →</button>
+                        <button class="btn btn-primary" onclick="proximaQuestao()">Próxima Questão →</button>
                         <button class="btn btn-secondary" onclick="toggleResults()">Fechar Resultados</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAINEL DO ALUNO -->
-        <div id="alunoPanel" class="panel">
-            <div class="card">
-                <div class="card-header">
-                    <h2>🎓 Enquete - Alunos</h2>
-                    <span class="badge" id="studentCounter">Questão 1/10</span>
-                </div>
-                
-                <div id="studentQuestion">
-                    <div class="question-text" id="studentQuestionText">Carregando questão...</div>
-                    
-                    <div class="options" id="studentOptions"></div>
-                    
-                    <div class="button-group">
-                        <button class="btn btn-primary" id="voteBtn" onclick="vote()">🗳️ Votar</button>
-                    </div>
-                    
-                    <div id="voteMessage" style="margin-top: 15px; display: none;"></div>
-                    
-                    <div id="studentResults" class="results hidden" style="margin-top: 20px;">
-                        <div style="background: #e3f2fd; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-                            <p style="color: #1a237e; font-weight: 500;">📊 Resultados Parciais</p>
-                        </div>
-                        <div class="stats">
-                            <div class="stat-box">
-                                <div class="number" id="studentTotalVotes">0</div>
-                                <div class="label">Total de Votos</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="number" id="studentAccuracy">0%</div>
-                                <div class="label">Taxa de Acerto</div>
-                            </div>
-                        </div>
-                        <div id="studentResultsList"></div>
                     </div>
                 </div>
             </div>
@@ -520,27 +550,9 @@
     </div>
 
     <script>
-        // ==================== SENHA DO PROFESSOR ====================
-        const SENHA_PROFESSOR = 'professor2024'; // Altere para a senha que desejar
+        // ==================== SENHA ====================
+        const SENHA_PROFESSOR = 'professor2024';
         let professorLogado = false;
-
-        function loginProfessor() {
-            const senha = document.getElementById('senhaInput').value;
-            const errorEl = document.getElementById('loginError');
-            
-            if (senha === SENHA_PROFESSOR) {
-                professorLogado = true;
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('tabProfessor').disabled = false;
-                errorEl.style.display = 'none';
-                // Atualizar para mostrar que está logado
-                document.querySelector('#professorPanel .card-header h2').textContent = '👨‍🏫 Painel do Professor (Logado)';
-            } else {
-                errorEl.style.display = 'block';
-                document.getElementById('senhaInput').value = '';
-                document.getElementById('senhaInput').focus();
-            }
-        }
 
         // ==================== DADOS ====================
         const questions = [
@@ -656,34 +668,83 @@
                 });
             });
             
-            loadQuestion(currentQuestionIndex);
+            // Garantir que a aba do aluno está ativa
+            document.getElementById('alunoPanel').classList.add('active');
+            document.getElementById('tabAluno').classList.add('active');
             
-            // Desabilitar tab Professor até login
-            document.getElementById('tabProfessor').disabled = true;
+            carregarQuestao(currentQuestionIndex);
         }
 
-        // ==================== TABS ====================
-        function switchTab(tab) {
-            if (tab === 'professor' && !professorLogado) {
-                alert('🔒 Acesso restrito! Faça login como professor primeiro.');
+        // ==================== ABAS ====================
+        function abrirAba(aba) {
+            if (aba === 'professor' && !professorLogado) {
+                document.getElementById('loginOverlay').classList.add('show');
+                document.getElementById('senhaInput').focus();
                 return;
             }
             
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            // Esconder todas as abas
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             
-            if (tab === 'professor') {
-                document.querySelector('.tab:first-child').classList.add('active');
+            if (aba === 'professor') {
                 document.getElementById('professorPanel').classList.add('active');
+                document.getElementById('tabProfessor').classList.add('active');
+                if (professorLogado) {
+                    atualizarResultadosProfessor();
+                }
             } else {
-                document.querySelector('.tab:last-child').classList.add('active');
                 document.getElementById('alunoPanel').classList.add('active');
-                updateStudentResults();
+                document.getElementById('tabAluno').classList.add('active');
+                atualizarResultadosAluno();
+            }
+        }
+
+        // ==================== LOGIN ====================
+        function loginProfessor() {
+            const senha = document.getElementById('senhaInput').value;
+            const errorEl = document.getElementById('loginError');
+            
+            if (senha === SENHA_PROFESSOR) {
+                professorLogado = true;
+                document.getElementById('loginOverlay').classList.remove('show');
+                errorEl.style.display = 'none';
+                document.getElementById('senhaInput').value = '';
+                
+                document.getElementById('tabProfessor').textContent = '👨‍🏫 Professor ✅';
+                document.getElementById('tabProfessor').style.background = '#2e7d32';
+                document.getElementById('tabProfessor').style.color = 'white';
+                
+                // Abrir aba do professor
+                abrirAba('professor');
+                
+                alert('✅ Login realizado com sucesso!');
+            } else {
+                errorEl.style.display = 'block';
+                document.getElementById('senhaInput').value = '';
+                document.getElementById('senhaInput').focus();
+            }
+        }
+
+        function fecharLogin() {
+            document.getElementById('loginOverlay').classList.remove('show');
+            document.getElementById('senhaInput').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            abrirAba('aluno');
+        }
+
+        function logoutProfessor() {
+            if (confirm('Deseja sair do modo professor?')) {
+                professorLogado = false;
+                document.getElementById('tabProfessor').textContent = '👨‍🏫 Professor 🔒';
+                document.getElementById('tabProfessor').style.background = '';
+                document.getElementById('tabProfessor').style.color = '';
+                abrirAba('aluno');
             }
         }
 
         // ==================== CARREGAR QUESTÃO ====================
-        function loadQuestion(index) {
+        function carregarQuestao(index) {
             if (index >= questions.length) {
                 alert('🎉 Todas as questões foram respondidas!');
                 return;
@@ -733,33 +794,32 @@
             document.getElementById('nextBtn').disabled = false;
             
             document.getElementById('resultsPanel').classList.add('hidden');
-            document.getElementById('studentResults').classList.add('hidden');
             showingResults = false;
-            
             document.getElementById('showResultsBtn').textContent = '📊 Mostrar Resultados';
             
-            updateStudentResults();
+            atualizarResultadosAluno();
+            if (professorLogado) {
+                atualizarResultadosProfessor();
+            }
         }
 
-        // ==================== VOTAÇÃO (ALUNO) ====================
-        function vote() {
+        // ==================== VOTAÇÃO ====================
+        function votar() {
             const q = questions[currentQuestionIndex];
             const selected = document.querySelector('input[name="studentOption"]:checked');
             
             if (!selected) {
-                showVoteMessage('⚠️ Selecione uma alternativa antes de votar!', 'alert-warning');
+                mostrarMensagem('⚠️ Selecione uma alternativa antes de votar!', 'alert-warning');
                 return;
             }
             
             const optionIndex = parseInt(selected.value);
             
-            // Verificar se já votou
             if (studentVotes[q.id] && studentVotes[q.id].length > 0) {
-                showVoteMessage('⚠️ Você já votou nesta questão!', 'alert-warning');
+                mostrarMensagem('⚠️ Você já votou nesta questão!', 'alert-warning');
                 return;
             }
             
-            // Registrar voto
             if (!studentVotes[q.id]) {
                 studentVotes[q.id] = [];
             }
@@ -769,32 +829,37 @@
             votes[q.id][optionIndex] += 1;
             
             const letras = ['A', 'B', 'C', 'D'];
-            showVoteMessage(`✅ Voto registrado! Você escolheu: ${letras[optionIndex]}`, 'alert-success');
+            mostrarMensagem(`✅ Voto registrado! Você escolheu: ${letras[optionIndex]}`, 'alert-success');
             
             document.getElementById('voteBtn').disabled = true;
             
-            if (showingResults) {
-                updateResults();
+            if (showingResults && professorLogado) {
+                atualizarResultadosProfessor();
             }
             
-            updateStudentResults();
+            atualizarResultadosAluno();
         }
 
-        function showVoteMessage(msg, className) {
+        function mostrarMensagem(msg, className) {
             const el = document.getElementById('voteMessage');
             el.textContent = msg;
             el.className = className;
             el.style.display = 'block';
         }
 
-        // ==================== RESULTADOS PROFESSOR ====================
+        // ==================== RESULTADOS ====================
         function toggleResults() {
+            if (!professorLogado) {
+                alert('🔒 Faça login como professor para ver os resultados completos!');
+                return;
+            }
+            
             showingResults = !showingResults;
             const panel = document.getElementById('resultsPanel');
             
             if (showingResults) {
                 panel.classList.remove('hidden');
-                updateResults();
+                atualizarResultadosProfessor();
                 document.getElementById('showResultsBtn').textContent = '🔒 Fechar Resultados';
             } else {
                 panel.classList.add('hidden');
@@ -802,7 +867,7 @@
             }
         }
 
-        function updateResults() {
+        function atualizarResultadosProfessor() {
             const q = questions[currentQuestionIndex];
             const votesData = votes[q.id];
             const total = votesData.total || 0;
@@ -858,22 +923,18 @@
             list.insertAdjacentHTML('beforeend', progressHtml);
         }
 
-        // ==================== RESULTADOS ALUNO ====================
-        function updateStudentResults() {
+        function atualizarResultadosAluno() {
             const q = questions[currentQuestionIndex];
             const votesData = votes[q.id];
             const total = votesData.total || 0;
             const correctIndex = q.correct;
             
             let correct = 0;
-            let wrong = 0;
             
             if (studentVotes[q.id]) {
                 studentVotes[q.id].forEach(vote => {
                     if (vote === correctIndex) {
                         correct++;
-                    } else {
-                        wrong++;
                     }
                 });
             }
@@ -898,15 +959,18 @@
                 `;
                 list.appendChild(div);
             });
-            
-            document.getElementById('studentResults').classList.remove('hidden');
         }
 
         // ==================== PRÓXIMA QUESTÃO ====================
-        function nextQuestion() {
+        function proximaQuestao() {
+            if (!professorLogado) {
+                alert('🔒 Apenas o professor pode avançar as questões!');
+                return;
+            }
+            
             if (currentQuestionIndex < questions.length - 1) {
                 currentQuestionIndex++;
-                loadQuestion(currentQuestionIndex);
+                carregarQuestao(currentQuestionIndex);
                 document.getElementById('voteBtn').disabled = false;
                 document.getElementById('voteMessage').style.display = 'none';
             } else {
@@ -914,8 +978,8 @@
             }
         }
 
-        // ==================== RESETAR (APENAS PROFESSOR) ====================
-        function resetAll() {
+        // ==================== REINICIAR ====================
+        function reiniciarTudo() {
             if (!professorLogado) {
                 alert('🔒 Apenas o professor pode reiniciar as enquetes!');
                 return;
@@ -931,15 +995,12 @@
                     });
                 });
                 currentQuestionIndex = 0;
-                loadQuestion(0);
+                carregarQuestao(0);
                 document.getElementById('voteBtn').disabled = false;
                 document.getElementById('voteMessage').style.display = 'none';
                 document.getElementById('resultsPanel').classList.add('hidden');
-                document.getElementById('studentResults').classList.add('hidden');
                 showingResults = false;
                 document.getElementById('showResultsBtn').textContent = '📊 Mostrar Resultados';
-                
-                showVoteMessage('🔄 Todos os votos foram reiniciados pelo professor!', 'alert-info');
             }
         }
 

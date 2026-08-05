@@ -5,514 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Enquetes</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f2f5;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .card-header h2 {
-            color: #1a237e;
-            font-size: 24px;
-        }
-
-        .badge {
-            background: #1a237e;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        .question-text {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .option:hover {
-            background: #e3f2fd;
-            border-color: #1a237e;
-        }
-
-        .option input[type="radio"] {
-            margin-right: 15px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .option label {
-            flex: 1;
-            cursor: pointer;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .option.votada {
-            background: #e8f5e9;
-            border-color: #2e7d32;
-        }
-
-        .option.votada-errada {
-            background: #ffebee;
-            border-color: #c62828;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #1a237e;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #283593;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
-        }
-
-        .btn-success {
-            background: #2e7d32;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #388e3c;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: #c62828;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #d32f2f;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #757575;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #616161;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #1a237e;
-            border: 2px solid #1a237e;
-        }
-
-        .btn-outline:hover {
-            background: #1a237e;
-            color: white;
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .button-group .btn {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .results {
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid #f0f2f5;
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 4px solid #1a237e;
-        }
-
-        .result-item.correct {
-            border-left-color: #2e7d32;
-            background: #e8f5e9;
-        }
-
-        .result-item.wrong {
-            border-left-color: #c62828;
-            background: #ffebee;
-        }
-
-        .result-item .label {
-            font-weight: 500;
-            flex: 1;
-        }
-
-        .result-item .value {
-            font-weight: 600;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-box {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-box .number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1a237e;
-        }
-
-        .stat-box .label {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .progress {
-            margin: 15px 0;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar .fill {
-            height: 100%;
-            background: #1a237e;
-            border-radius: 4px;
-            transition: width 0.5s;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .alert-danger {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .aviso-aluno {
-            background: #e3f2fd;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #1a237e;
-        }
-
-        .navegacao {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .navegacao .btn {
-            flex: 0 1 auto;
-            min-width: 120px;
-        }
-
-        @media (max-width: 600px) {
-            .card {
-                padding: 20px;
-            }
-            
-            .question-text {
-                font-size: 18px;
-            }
-            
-            .option {
-                padding: 12px 15px;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .button-group .btn {
-                width: 100%;
-            }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .navegacao .btn {
-                flex: 1;
-            }
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            background: #e0e0e0;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            flex: 1;
-            text-align: center;
-        }
-
-        .tab.active {
-            background: #1a237e;
-            color: white;
-        }
-
-        .tab:hover {
-            transform: translateY(-2px);
-        }
-
-        .tab-aluno {
-            background: #4caf50;
-            color: white;
-        }
-
-        .tab-aluno:hover {
-            background: #388e3c;
-        }
-
-        .tab-aluno.active {
-            background: #1a237e;
-            color: white;
-        }
-
-        .panel {
-            display: none;
-        }
-
-        .panel.active {
-            display: block;
-        }
-
-        /* Login */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .login-overlay.show {
-            display: flex;
-        }
-
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-
-        .login-box h2 {
-            color: #1a237e;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        .login-box input:focus {
-            border-color: #1a237e;
-            outline: none;
-        }
-
-        .login-box .btn {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .login-error {
-            color: #c62828;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .login-close {
-            text-align: center;
-            margin-top: 15px;
-            color: #666;
-            cursor: pointer;
-        }
-
-        .login-close:hover {
-            color: #1a237e;
-        }
-
-        .status-voto {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .status-voto.votou {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-voto.nao-votou {
-            background: #fff3cd;
-            color: #856404;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f2f5;padding:20px}
+        .container{max-width:900px;margin:0 auto}
+        .card{background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-bottom:20px}
+        .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid #f0f2f5;flex-wrap:wrap;gap:10px}
+        .card-header h2{color:#1a237e;font-size:24px}
+        .badge{background:#1a237e;color:white;padding:5px 15px;border-radius:20px;font-size:14px}
+        .question-text{font-size:20px;color:#333;margin-bottom:25px;line-height:1.5;font-weight:500}
+        .options{display:flex;flex-direction:column;gap:12px}
+        .option{display:flex;align-items:center;padding:15px 20px;background:#f8f9fa;border-radius:8px;border:2px solid #e0e0e0;transition:all .3s;cursor:pointer}
+        .option:hover{background:#e3f2fd;border-color:#1a237e}
+        .option input[type=radio]{margin-right:15px;width:18px;height:18px;cursor:pointer;flex-shrink:0}
+        .option label{flex:1;cursor:pointer;font-size:16px;color:#333}
+        .option.correta{background:#e8f5e9;border-color:#2e7d32}
+        .option.errada{background:#ffebee;border-color:#c62828}
+        .option.votada{background:#e8f5e9;border-color:#2e7d32}
+        .btn{padding:12px 30px;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s}
+        .btn-primary{background:#1a237e;color:#fff}
+        .btn-primary:hover{background:#283593;transform:translateY(-2px);box-shadow:0 4px 12px rgba(26,35,126,.3)}
+        .btn-success{background:#2e7d32;color:#fff}
+        .btn-success:hover{background:#388e3c;transform:translateY(-2px)}
+        .btn-danger{background:#c62828;color:#fff}
+        .btn-danger:hover{background:#d32f2f;transform:translateY(-2px)}
+        .btn-secondary{background:#757575;color:#fff}
+        .btn-secondary:hover{background:#616161}
+        .btn-outline{background:transparent;color:#1a237e;border:2px solid #1a237e}
+        .btn-outline:hover{background:#1a237e;color:#fff}
+        .btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+        .button-group{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+        .button-group .btn{flex:1;min-width:120px}
+        .results{margin-top:25px;padding-top:25px;border-top:2px solid #f0f2f5}
+        .result-item{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;margin-bottom:8px;background:#f8f9fa;border-radius:6px;border-left:4px solid #1a237e}
+        .result-item .label{font-weight:500;flex:1}
+        .result-item .value{font-weight:600}
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin:20px 0}
+        .stat-box{background:#f8f9fa;padding:15px;border-radius:8px;text-align:center}
+        .stat-box .number{font-size:28px;font-weight:700;color:#1a237e}
+        .stat-box .label{font-size:14px;color:#666;margin-top:5px}
+        .hidden{display:none!important}
+        .progress{margin:15px 0}
+        .progress-bar{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden}
+        .progress-bar .fill{height:100%;background:#1a237e;border-radius:4px;transition:width .5s}
+        .alert{padding:15px;border-radius:8px;margin:10px 0;font-weight:500}
+        .alert-success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+        .alert-info{background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb}
+        .alert-warning{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
+        .alert-danger{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+        .aviso-aluno{background:#e3f2fd;padding:12px 15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #1a237e}
+        .navegacao{display:flex;gap:10px;justify-content:center;margin-top:15px}
+        .navegacao .btn{flex:0 1 auto;min-width:120px}
+        .pontuacao{background:linear-gradient(135deg,#1a237e,#283593);color:white;padding:15px 20px;border-radius:10px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .pontuacao .numero{font-size:32px;font-weight:bold}
+        .pontuacao .label{font-size:14px;opacity:0.9}
+        .pontuacao .detalhes{font-size:13px;opacity:0.8}
+        @media(max-width:600px){.card{padding:20px}.question-text{font-size:18px}.option{padding:12px 15px}.button-group{flex-direction:column}.button-group .btn{width:100%}.card-header{flex-direction:column;align-items:flex-start}.navegacao .btn{flex:1}}
+        .tabs{display:flex;gap:10px;margin-bottom:20px}
+        .tab{padding:12px 24px;background:#e0e0e0;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:all .3s;flex:1;text-align:center}
+        .tab.active{background:#1a237e;color:#fff}
+        .tab:hover{transform:translateY(-2px)}
+        .tab-aluno{background:#4caf50;color:#fff}
+        .tab-aluno:hover{background:#388e3c}
+        .tab-aluno.active{background:#1a237e;color:#fff}
+        .panel{display:none}
+        .panel.active{display:block}
+        .login-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000}
+        .login-overlay.show{display:flex}
+        .login-box{background:#fff;padding:40px;border-radius:12px;max-width:400px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+        .login-box h2{color:#1a237e;margin-bottom:20px;text-align:center}
+        .login-box input{width:100%;padding:12px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:16px}
+        .login-box input:focus{border-color:#1a237e;outline:0}
+        .login-box .btn{width:100%;margin-top:10px}
+        .login-error{color:#c62828;text-align:center;margin-top:10px;display:none}
+        .login-close{text-align:center;margin-top:15px;color:#666;cursor:pointer}
+        .login-close:hover{color:#1a237e}
+        .feedback-voto{font-size:18px;font-weight:bold;text-align:center;padding:20px;border-radius:10px;margin:15px 0}
+        .feedback-acertou{background:#d4edda;color:#155724;border:2px solid #2e7d32}
+        .feedback-errou{background:#f8d7da;color:#721c24;border:2px solid #c62828}
+        .result-item-aluno{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;margin-bottom:8px;background:#f8f9fa;border-radius:6px;border-left:4px solid #1a237e}
+        .debug-info{background:#fff3cd;padding:10px;border-radius:8px;margin:10px 0;border:1px solid #ffc107;display:none}
     </style>
 </head>
 <body>
-    <!-- TELA DE LOGIN -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
             <h2>🔒 Acesso do Professor</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 20px;">Digite a senha para acessar o painel</p>
+            <p style="text-align:center;color:#666;margin-bottom:20px">Digite a senha para acessar o painel</p>
             <input type="password" id="senhaInput" placeholder="Digite a senha..." onkeypress="if(event.key==='Enter') loginProfessor()">
             <button class="btn btn-primary" onclick="loginProfessor()">Entrar</button>
             <div id="loginError" class="login-error">❌ Senha incorreta! Tente novamente.</div>
             <div class="login-close" onclick="fecharLogin()">✕ Voltar para o modo Aluno</div>
-            <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #999;">Senha padrão: <strong>professor2024</strong></p>
         </div>
     </div>
 
     <div class="container">
-        <!-- TABS -->
         <div class="tabs">
             <button class="tab tab-aluno active" id="tabAluno" onclick="abrirAba('aluno')">🎓 Aluno</button>
             <button class="tab" id="tabProfessor" onclick="abrirAba('professor')">👨‍🏫 Professor 🔒</button>
         </div>
 
-        <!-- PAINEL DO ALUNO -->
         <div id="alunoPanel" class="panel active">
             <div class="card">
                 <div class="card-header">
@@ -520,40 +111,39 @@
                     <span class="badge" id="studentCounter">Questão 1/10</span>
                 </div>
                 
-                <div class="aviso-aluno">
-                    ℹ️ <strong>Modo Aluno:</strong> Você pode navegar entre as questões e votar apenas uma vez por questão.
+                <div class="pontuacao" id="pontuacaoAluno">
+                    <div>
+                        <span class="label">🏆 Sua Pontuação</span>
+                        <span class="numero" id="pontuacaoNumero">0</span>
+                    </div>
+                    <div>
+                        <span class="detalhes">✅ <span id="totalAcertos">0</span> acertos</span>
+                        <span class="detalhes" style="margin-left:15px">📝 <span id="totalRespondidas">0</span> respondidas</span>
+                    </div>
                 </div>
+
+                <div class="aviso-aluno">ℹ️ <strong>Modo Aluno:</strong> Você pode navegar entre as questões e votar apenas uma vez por questão.</div>
                 
                 <div id="studentQuestion">
                     <div class="question-text" id="studentQuestionText">Carregando questão...</div>
-                    
                     <div class="options" id="studentOptions"></div>
-                    
                     <div class="button-group">
                         <button class="btn btn-primary" id="voteBtn" onclick="votar()">🗳️ Votar</button>
                     </div>
                     
-                    <div id="voteMessage" style="margin-top: 15px; display: none;"></div>
-
-                    <!-- Navegação entre questões -->
+                    <div id="feedbackVoto" style="display:none;"></div>
+                    <div id="voteMessage" style="margin-top:15px;display:none"></div>
+                    
                     <div class="navegacao">
                         <button class="btn btn-outline" onclick="questaoAnterior()">◀ Anterior</button>
                         <button class="btn btn-outline" onclick="proximaQuestaoAluno()">Próxima ▶</button>
                     </div>
                     
-                    <div id="studentResults" class="results" style="margin-top: 20px;">
-                        <div style="background: #e3f2fd; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-                            <p style="color: #1a237e; font-weight: 500;">📊 Resultados Parciais</p>
-                        </div>
+                    <div id="studentResults" class="results" style="margin-top:20px">
+                        <div style="background:#e3f2fd;padding:10px;border-radius:8px;margin-bottom:15px"><p style="color:#1a237e;font-weight:500">📊 Resultados Parciais</p></div>
                         <div class="stats">
-                            <div class="stat-box">
-                                <div class="number" id="studentTotalVotes">0</div>
-                                <div class="label">Total de Votos</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="number" id="studentAccuracy">0%</div>
-                                <div class="label">Taxa de Acerto</div>
-                            </div>
+                            <div class="stat-box"><div class="number" id="studentTotalVotes">0</div><div class="label">Total de Votos</div></div>
+                            <div class="stat-box"><div class="number" id="studentAccuracy">0%</div><div class="label">Taxa de Acerto</div></div>
                         </div>
                         <div id="studentResultsList"></div>
                     </div>
@@ -561,19 +151,15 @@
             </div>
         </div>
 
-        <!-- PAINEL DO PROFESSOR -->
         <div id="professorPanel" class="panel">
             <div class="card">
                 <div class="card-header">
                     <h2>👨‍🏫 Painel do Professor</h2>
                     <span class="badge" id="questionCounter">Questão 1/10</span>
                 </div>
-                
                 <div id="questionDisplay">
                     <div class="question-text" id="currentQuestion">Carregando questão...</div>
-                    
                     <div class="options" id="optionsContainer"></div>
-                    
                     <div class="button-group">
                         <button class="btn btn-primary" id="nextBtn" onclick="proximaQuestaoProfessor()">Próxima Questão →</button>
                         <button class="btn btn-success" id="showResultsBtn" onclick="toggleResults()">📊 Mostrar Resultados</button>
@@ -581,31 +167,15 @@
                         <button class="btn btn-secondary" onclick="logoutProfessor()">🚪 Sair</button>
                     </div>
                 </div>
-                
                 <div id="resultsPanel" class="results hidden">
-                    <h3 style="margin-bottom: 15px;">📊 Resultados da Questão</h3>
-                    
+                    <h3 style="margin-bottom:15px">📊 Resultados da Questão</h3>
                     <div class="stats">
-                        <div class="stat-box">
-                            <div class="number" id="totalVotes">0</div>
-                            <div class="label">Total de Votos</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number" id="correctCount">0</div>
-                            <div class="label">✅ Acertos</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number" id="wrongCount">0</div>
-                            <div class="label">❌ Erros</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number" id="accuracy">0%</div>
-                            <div class="label">Taxa de Acerto</div>
-                        </div>
+                        <div class="stat-box"><div class="number" id="totalVotes">0</div><div class="label">Total de Votos</div></div>
+                        <div class="stat-box"><div class="number" id="correctCount">0</div><div class="label">✅ Acertos</div></div>
+                        <div class="stat-box"><div class="number" id="wrongCount">0</div><div class="label">❌ Erros</div></div>
+                        <div class="stat-box"><div class="number" id="accuracy">0%</div><div class="label">Taxa de Acerto</div></div>
                     </div>
-                    
                     <div id="resultsList"></div>
-                    
                     <div class="button-group">
                         <button class="btn btn-primary" onclick="proximaQuestaoProfessor()">Próxima Questão →</button>
                         <button class="btn btn-secondary" onclick="toggleResults()">Fechar Resultados</button>
@@ -616,440 +186,478 @@
     </div>
 
     <script>
-        // ==================== SENHA ====================
-        const SENHA_PROFESSOR = 'professor2024';
-        let professorLogado = false;
+    // ============================================================
+    // CONFIGURAÇÕES
+    // ============================================================
+    var SENHA_PROFESSOR = 'professor2024';
+    var professorLogado = false;
+    var currentQuestionIndex = 0;
+    var showingResults = false;
+    
+    // ============================================================
+    // DADOS DAS QUESTÕES
+    // ============================================================
+    var questions = [
+        {id:1,text:"Qual conjunto de elementos compõe um Sistema de Informação, segundo o material?",options:["Hardware, software, internet e nuvem","Pessoas, processos, dados e tecnologia","Servidores, redes, bancos de dados e usuários","Gerentes, funcionários, clientes e fornecedores"],correct:1},
+        {id:2,text:"Qual sistema é responsável por registrar as operações do dia a dia da empresa, como vendas e movimentações de estoque?",options:["SIG","SAD","SPT","CRM"],correct:2},
+        {id:3,text:"De acordo com o material, por que o SPT é considerado a base de todos os outros sistemas?",options:["Porque é o mais caro de implementar","Porque gera os dados operacionais que alimentam os demais sistemas","Porque é usado exclusivamente pela diretoria","Porque substitui o ERP em pequenas empresas"],correct:1},
+        {id:4,text:"Qual das alternativas é um exemplo prático de SPT citado no material?",options:["Dashboard de indicadores estratégicos","Simulação de rotas de entrega","Frente de caixa de um supermercado","Campanha de e-mail marketing segmentada"],correct:2},
+        {id:5,text:"O SIG (Sistema de Informação Gerencial) tem como foco principal:",options:["Simular cenários e comparar alternativas complexas","Transformar dados do SPT em relatórios e indicadores periódicos","Registrar transações operacionais em tempo real","Gerenciar o relacionamento com clientes"],correct:1},
+        {id:6,text:"Qual sistema permite que o usuário explore perguntas do tipo 'e se?' e compare cenários alternativos?",options:["SPT","SIG","SAD","CRM"],correct:2},
+        {id:7,text:"No material, qual das opções abaixo é apresentada como exemplo prático de SAD?",options:["Emissão de notas fiscais","Simulação de rotas de entrega","Relatório mensal de vendas por região","Histórico de atendimento ao cliente"],correct:1},
+        {id:8,text:'O ERP é descrito no material como o "sistema dos sistemas" porque:',options:["Ele substitui completamente o SPT e o SIG","Ele integra processos de diferentes áreas em uma única base de dados","Ele é usado apenas pelo setor de vendas","Ele funciona exclusivamente para grandes multinacionais"],correct:1},
+        {id:9,text:"Qual sistema tem como foco centralizar contatos, histórico de compras e preferências dos clientes?",options:["SIG","SAD","ERP","CRM"],correct:3},
+        {id:10,text:"Segundo a Pirâmide dos Sistemas de Informação apresentada no material, qual afirmação está correta?",options:["Quanto mais alto o nível, maior o volume de dados operacionais","O SPT apoia o nível estratégico da organização","Quanto mais alto o nível, mais estratégica e resumida é a informação","O ERP atua apenas no nível operacional"],correct:2}
+    ];
 
-        // ==================== DADOS ====================
-        const questions = [
-            {
-                id: 1,
-                text: "Qual conjunto de elementos compõe um Sistema de Informação, segundo o material?",
-                options: [
-                    "Hardware, software, internet e nuvem",
-                    "Pessoas, processos, dados e tecnologia",
-                    "Servidores, redes, bancos de dados e usuários",
-                    "Gerentes, funcionários, clientes e fornecedores"
-                ],
-                correct: 1
-            },
-            {
-                id: 2,
-                text: "Qual sistema é responsável por registrar as operações do dia a dia da empresa, como vendas e movimentações de estoque?",
-                options: ["SIG", "SAD", "SPT", "CRM"],
-                correct: 2
-            },
-            {
-                id: 3,
-                text: "De acordo com o material, por que o SPT é considerado a base de todos os outros sistemas?",
-                options: [
-                    "Porque é o mais caro de implementar",
-                    "Porque gera os dados operacionais que alimentam os demais sistemas",
-                    "Porque é usado exclusivamente pela diretoria",
-                    "Porque substitui o ERP em pequenas empresas"
-                ],
-                correct: 1
-            },
-            {
-                id: 4,
-                text: "Qual das alternativas é um exemplo prático de SPT citado no material?",
-                options: [
-                    "Dashboard de indicadores estratégicos",
-                    "Simulação de rotas de entrega",
-                    "Frente de caixa de um supermercado",
-                    "Campanha de e-mail marketing segmentada"
-                ],
-                correct: 2
-            },
-            {
-                id: 5,
-                text: "O SIG (Sistema de Informação Gerencial) tem como foco principal:",
-                options: [
-                    "Simular cenários e comparar alternativas complexas",
-                    "Transformar dados do SPT em relatórios e indicadores periódicos",
-                    "Registrar transações operacionais em tempo real",
-                    "Gerenciar o relacionamento com clientes"
-                ],
-                correct: 1
-            },
-            {
-                id: 6,
-                text: "Qual sistema permite que o usuário explore perguntas do tipo 'e se?' e compare cenários alternativos?",
-                options: ["SPT", "SIG", "SAD", "CRM"],
-                correct: 2
-            },
-            {
-                id: 7,
-                text: "No material, qual das opções abaixo é apresentada como exemplo prático de SAD?",
-                options: [
-                    "Emissão de notas fiscais",
-                    "Simulação de rotas de entrega",
-                    "Relatório mensal de vendas por região",
-                    "Histórico de atendimento ao cliente"
-                ],
-                correct: 1
-            },
-            {
-                id: 8,
-                text: 'O ERP é descrito no material como o "sistema dos sistemas" porque:',
-                options: [
-                    "Ele substitui completamente o SPT e o SIG",
-                    "Ele integra processos de diferentes áreas em uma única base de dados",
-                    "Ele é usado apenas pelo setor de vendas",
-                    "Ele funciona exclusivamente para grandes multinacionais"
-                ],
-                correct: 1
-            },
-            {
-                id: 9,
-                text: "Qual sistema tem como foco centralizar contatos, histórico de compras e preferências dos clientes?",
-                options: ["SIG", "SAD", "ERP", "CRM"],
-                correct: 3
-            },
-            {
-                id: 10,
-                text: "Segundo a Pirâmide dos Sistemas de Informação apresentada no material, qual afirmação está correta?",
-                options: [
-                    "Quanto mais alto o nível, maior o volume de dados operacionais",
-                    "O SPT apoia o nível estratégico da organização",
-                    "Quanto mais alto o nível, mais estratégica e resumida é a informação",
-                    "O ERP atua apenas no nível operacional"
-                ],
-                correct: 2
+    // ============================================================
+    // PONTUAÇÃO DO ALUNO - COM LOCALSTORAGE
+    // ============================================================
+    function carregarPontuacao() {
+        try {
+            var dados = localStorage.getItem('pontuacaoAluno');
+            if (dados) {
+                return JSON.parse(dados);
             }
-        ];
+        } catch(e) {}
+        return { acertos: 0, totalRespondidas: 0 };
+    }
 
-        // ==================== ESTADO ====================
-        let currentQuestionIndex = 0;
-        let votes = {};
-        let studentVotes = {};
-        let showingResults = false;
+    function salvarPontuacao() {
+        localStorage.setItem('pontuacaoAluno', JSON.stringify(pontuacaoAluno));
+    }
 
-        // ==================== INICIALIZAÇÃO ====================
-        function init() {
-            questions.forEach(q => {
-                votes[q.id] = { total: 0 };
-                q.options.forEach((_, idx) => {
-                    votes[q.id][idx] = 0;
-                });
-            });
-            
+    var pontuacaoAluno = carregarPontuacao();
+
+    function atualizarPontuacao() {
+        document.getElementById('pontuacaoNumero').textContent = pontuacaoAluno.acertos;
+        document.getElementById('totalAcertos').textContent = pontuacaoAluno.acertos;
+        document.getElementById('totalRespondidas').textContent = pontuacaoAluno.totalRespondidas;
+    }
+
+    // ============================================================
+    // VOTOS - COM LOCALSTORAGE
+    // ============================================================
+    function carregarDados(chave, padrao) {
+        try {
+            var dados = localStorage.getItem(chave);
+            if (dados) {
+                return JSON.parse(dados);
+            }
+        } catch(e) {}
+        return padrao;
+    }
+
+    function salvarDados(chave, dados) {
+        localStorage.setItem(chave, JSON.stringify(dados));
+    }
+
+    var votes = carregarDados('votes', {});
+    var studentVotes = carregarDados('studentVotes', {});
+
+    function inicializarVotos() {
+        if (Object.keys(votes).length === 0) {
+            for(var i=0;i<questions.length;i++){
+                var q=questions[i];
+                votes[q.id]={total:0};
+                for(var j=0;j<q.options.length;j++){
+                    votes[q.id][j]=0;
+                }
+            }
+            salvarDados('votes', votes);
+        }
+    }
+
+    // ============================================================
+    // INICIALIZAÇÃO
+    // ============================================================
+    function init() {
+        inicializarVotos();
+        document.getElementById('alunoPanel').classList.add('active');
+        document.getElementById('tabAluno').classList.add('active');
+        carregarQuestao(0);
+        atualizarPontuacao();
+    }
+
+    // ============================================================
+    // ABAS
+    // ============================================================
+    function abrirAba(aba){
+        if(aba==='professor' && !professorLogado){
+            document.getElementById('loginOverlay').classList.add('show');
+            document.getElementById('senhaInput').focus();
+            return;
+        }
+        var panels=document.querySelectorAll('.panel');
+        for(var i=0;i<panels.length;i++){panels[i].classList.remove('active');}
+        var tabs=document.querySelectorAll('.tab');
+        for(var i=0;i<tabs.length;i++){tabs[i].classList.remove('active');}
+        if(aba==='professor'){
+            document.getElementById('professorPanel').classList.add('active');
+            document.getElementById('tabProfessor').classList.add('active');
+            if(professorLogado){atualizarResultadosProfessor();}
+        }else{
             document.getElementById('alunoPanel').classList.add('active');
             document.getElementById('tabAluno').classList.add('active');
-            
-            carregarQuestao(currentQuestionIndex);
+            atualizarResultadosAluno();
         }
+    }
 
-        // ==================== ABAS ====================
-        function abrirAba(aba) {
-            if (aba === 'professor' && !professorLogado) {
-                document.getElementById('loginOverlay').classList.add('show');
-                document.getElementById('senhaInput').focus();
-                return;
-            }
-            
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            
-            if (aba === 'professor') {
-                document.getElementById('professorPanel').classList.add('active');
-                document.getElementById('tabProfessor').classList.add('active');
-                if (professorLogado) {
-                    atualizarResultadosProfessor();
-                }
-            } else {
-                document.getElementById('alunoPanel').classList.add('active');
-                document.getElementById('tabAluno').classList.add('active');
-                atualizarResultadosAluno();
-            }
-        }
-
-        // ==================== LOGIN ====================
-        function loginProfessor() {
-            const senha = document.getElementById('senhaInput').value;
-            const errorEl = document.getElementById('loginError');
-            
-            if (senha === SENHA_PROFESSOR) {
-                professorLogado = true;
-                document.getElementById('loginOverlay').classList.remove('show');
-                errorEl.style.display = 'none';
-                document.getElementById('senhaInput').value = '';
-                
-                document.getElementById('tabProfessor').textContent = '👨‍🏫 Professor ✅';
-                document.getElementById('tabProfessor').style.background = '#2e7d32';
-                document.getElementById('tabProfessor').style.color = 'white';
-                
-                abrirAba('professor');
-                alert('✅ Login realizado com sucesso!');
-            } else {
-                errorEl.style.display = 'block';
-                document.getElementById('senhaInput').value = '';
-                document.getElementById('senhaInput').focus();
-            }
-        }
-
-        function fecharLogin() {
+    // ============================================================
+    // LOGIN
+    // ============================================================
+    function loginProfessor(){
+        var senha=document.getElementById('senhaInput').value;
+        var errorEl=document.getElementById('loginError');
+        if(senha===SENHA_PROFESSOR){
+            professorLogado=true;
             document.getElementById('loginOverlay').classList.remove('show');
-            document.getElementById('senhaInput').value = '';
-            document.getElementById('loginError').style.display = 'none';
+            errorEl.style.display='none';
+            document.getElementById('senhaInput').value='';
+            document.getElementById('tabProfessor').textContent='👨‍🏫 Professor ✅';
+            document.getElementById('tabProfessor').style.background='#2e7d32';
+            document.getElementById('tabProfessor').style.color='white';
+            abrirAba('professor');
+            alert('✅ Login realizado com sucesso!');
+        }else{
+            errorEl.style.display='block';
+            document.getElementById('senhaInput').value='';
+            document.getElementById('senhaInput').focus();
+        }
+    }
+
+    function fecharLogin(){
+        document.getElementById('loginOverlay').classList.remove('show');
+        document.getElementById('senhaInput').value='';
+        document.getElementById('loginError').style.display='none';
+        abrirAba('aluno');
+    }
+
+    function logoutProfessor(){
+        if(confirm('Deseja sair do modo professor?')){
+            professorLogado=false;
+            document.getElementById('tabProfessor').textContent='👨‍🏫 Professor 🔒';
+            document.getElementById('tabProfessor').style.background='';
+            document.getElementById('tabProfessor').style.color='';
             abrirAba('aluno');
         }
+    }
 
-        function logoutProfessor() {
-            if (confirm('Deseja sair do modo professor?')) {
-                professorLogado = false;
-                document.getElementById('tabProfessor').textContent = '👨‍🏫 Professor 🔒';
-                document.getElementById('tabProfessor').style.background = '';
-                document.getElementById('tabProfessor').style.color = '';
-                abrirAba('aluno');
+    // ============================================================
+    // CARREGAR QUESTÃO
+    // ============================================================
+    function carregarQuestao(index){
+        if(index<0) index=0;
+        if(index>=questions.length) index=questions.length-1;
+        currentQuestionIndex=index;
+        var q=questions[index];
+        
+        document.getElementById('questionCounter').textContent='Questão '+(index+1)+'/'+questions.length;
+        document.getElementById('studentCounter').textContent='Questão '+(index+1)+'/'+questions.length;
+        
+        var letras=['A','B','C','D'];
+        
+        // --- Painel Professor ---
+        document.getElementById('currentQuestion').textContent=q.text;
+        var optionsContainer=document.getElementById('optionsContainer');
+        optionsContainer.innerHTML='';
+        for(var i=0;i<q.options.length;i++){
+            var div=document.createElement('div');
+            div.className='option';
+            div.innerHTML='<input type="radio" name="professorOption" value="'+i+'" id="profOpt'+i+'"><label for="profOpt'+i+'"><strong>'+letras[i]+'.</strong> '+q.options[i]+'</label>';
+            optionsContainer.appendChild(div);
+        }
+        
+        // --- Painel Aluno ---
+        document.getElementById('studentQuestionText').textContent=q.text;
+        var studentOptions=document.getElementById('studentOptions');
+        studentOptions.innerHTML='';
+        
+        var jaVotou = studentVotes[q.id] && studentVotes[q.id].length > 0;
+        var votoAluno = jaVotou ? studentVotes[q.id][0] : -1;
+        
+        for(var i=0;i<q.options.length;i++){
+            var div=document.createElement('div');
+            var className='option';
+            
+            if(jaVotou){
+                if(i===q.correct){
+                    className += ' correta';
+                }
+                if(i===votoAluno && i!==q.correct){
+                    className += ' errada';
+                }
+                if(i===votoAluno){
+                    className += ' votada';
+                }
+            }
+            
+            div.className=className;
+            var checked = (jaVotou && i===votoAluno) ? 'checked' : '';
+            var disabled = jaVotou ? 'disabled' : '';
+            var emoji = '';
+            
+            if(jaVotou){
+                if(i===q.correct){
+                    emoji=' ✅';
+                } else if(i===votoAluno && i!==q.correct){
+                    emoji=' ❌';
+                }
+            }
+            
+            div.innerHTML='<input type="radio" name="studentOption" value="'+i+'" id="studOpt'+i+'" '+checked+' '+disabled+'><label for="studOpt'+i+'"><strong>'+letras[i]+'.</strong> '+q.options[i]+'</label>'+emoji;
+            studentOptions.appendChild(div);
+        }
+        
+        document.getElementById('voteMessage').style.display='none';
+        document.getElementById('voteMessage').className='';
+        document.getElementById('feedbackVoto').style.display='none';
+        
+        var voteBtn=document.getElementById('voteBtn');
+        voteBtn.disabled = jaVotou;
+        
+        document.getElementById('nextBtn').disabled=false;
+        document.getElementById('resultsPanel').classList.add('hidden');
+        showingResults=false;
+        document.getElementById('showResultsBtn').textContent='📊 Mostrar Resultados';
+        
+        atualizarPontuacao();
+        atualizarResultadosAluno();
+        if(professorLogado){
+            atualizarResultadosProfessor();
+        }
+    }
+
+    // ============================================================
+    // NAVEGAÇÃO DO ALUNO
+    // ============================================================
+    function proximaQuestaoAluno(){
+        if(currentQuestionIndex < questions.length - 1){
+            carregarQuestao(currentQuestionIndex + 1);
+        }else{
+            alert('🎉 Você já está na última questão!');
+        }
+    }
+
+    function questaoAnterior(){
+        if(currentQuestionIndex > 0){
+            carregarQuestao(currentQuestionIndex - 1);
+        }else{
+            alert('📌 Você já está na primeira questão!');
+        }
+    }
+
+    // ============================================================
+    // VOTAR
+    // ============================================================
+    function votar(){
+        var q = questions[currentQuestionIndex];
+        var selected = document.querySelector('input[name="studentOption"]:checked');
+        
+        if(!selected){
+            mostrarMensagem('⚠️ Selecione uma alternativa antes de votar!','alert-warning');
+            return;
+        }
+        
+        var optionIndex = parseInt(selected.value);
+        
+        if(studentVotes[q.id] && studentVotes[q.id].length > 0){
+            mostrarMensagem('⚠️ Você já votou nesta questão!','alert-warning');
+            return;
+        }
+        
+        if(!studentVotes[q.id]){
+            studentVotes[q.id] = [];
+        }
+        studentVotes[q.id].push(optionIndex);
+        salvarDados('studentVotes', studentVotes);
+        
+        votes[q.id].total += 1;
+        votes[q.id][optionIndex] += 1;
+        salvarDados('votes', votes);
+        
+        var letras = ['A','B','C','D'];
+        var acertou = (optionIndex === q.correct);
+        
+        pontuacaoAluno.totalRespondidas += 1;
+        if(acertou){
+            pontuacaoAluno.acertos += 1;
+        }
+        salvarPontuacao();
+        atualizarPontuacao();
+        
+        var feedbackDiv = document.getElementById('feedbackVoto');
+        feedbackDiv.style.display = 'block';
+        if(acertou){
+            feedbackDiv.className = 'feedback-voto feedback-acertou';
+            feedbackDiv.innerHTML = '✅ <strong>Parabéns! Você ACERTOU!</strong><br>A resposta correta é: ' + letras[q.correct] + ' - ' + q.options[q.correct];
+        }else{
+            feedbackDiv.className = 'feedback-voto feedback-errou';
+            feedbackDiv.innerHTML = '❌ <strong>Você ERROU!</strong><br>A resposta correta é: ' + letras[q.correct] + ' - ' + q.options[q.correct];
+        }
+        
+        mostrarMensagem((acertou?'✅':'❌')+' Voto registrado!', acertou?'alert-success':'alert-danger');
+        document.getElementById('voteBtn').disabled = true;
+        
+        setTimeout(function(){
+            carregarQuestao(currentQuestionIndex);
+        }, 1500);
+        
+        if(showingResults && professorLogado){
+            atualizarResultadosProfessor();
+        }
+        atualizarResultadosAluno();
+    }
+
+    function mostrarMensagem(msg, className){
+        var el = document.getElementById('voteMessage');
+        el.textContent = msg;
+        el.className = className;
+        el.style.display = 'block';
+    }
+
+    // ============================================================
+    // RESULTADOS
+    // ============================================================
+    function toggleResults(){
+        if(!professorLogado){
+            alert('🔒 Faça login como professor para ver os resultados completos!');
+            return;
+        }
+        showingResults = !showingResults;
+        var panel = document.getElementById('resultsPanel');
+        if(showingResults){
+            panel.classList.remove('hidden');
+            atualizarResultadosProfessor();
+            document.getElementById('showResultsBtn').textContent = '🔒 Fechar Resultados';
+        }else{
+            panel.classList.add('hidden');
+            document.getElementById('showResultsBtn').textContent = '📊 Mostrar Resultados';
+        }
+    }
+
+    function atualizarResultadosProfessor(){
+        var q = questions[currentQuestionIndex];
+        var votesData = votes[q.id];
+        var total = votesData.total || 0;
+        var correctIndex = q.correct;
+        
+        var correct = 0;
+        var wrong = 0;
+        
+        if(studentVotes[q.id]){
+            for(var i=0;i<studentVotes[q.id].length;i++){
+                if(studentVotes[q.id][i] === correctIndex){
+                    correct++;
+                }else{
+                    wrong++;
+                }
             }
         }
+        
+        document.getElementById('totalVotes').textContent = total;
+        document.getElementById('correctCount').textContent = correct;
+        document.getElementById('wrongCount').textContent = wrong;
+        document.getElementById('accuracy').textContent = total > 0 ? Math.round((correct/total)*100) + '%' : '0%';
+        
+        var list = document.getElementById('resultsList');
+        list.innerHTML = '';
+        var letras = ['A','B','C','D'];
+        
+        for(var i=0;i<q.options.length;i++){
+            var count = votesData[i] || 0;
+            var pct = total > 0 ? Math.round((count/total)*100) : 0;
+            var isCorrect = (i === correctIndex);
+            
+            var div = document.createElement('div');
+            div.className = 'result-item ' + (isCorrect ? 'correct' : '');
+            div.innerHTML = '<span class="label">' + (isCorrect ? '✅' : '') + ' <strong>' + letras[i] + '.</strong> ' + q.options[i] + '</span><span class="value">' + count + ' votos (' + pct + '%)</span>';
+            list.appendChild(div);
+        }
+        
+        var progressHtml = '<div class="progress"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span>📌 Gabarito: Alternativa <strong>' + letras[correctIndex] + '</strong></span><span>✅ ' + correct + ' acertos</span></div><div class="progress-bar"><div class="fill" style="width:' + (total > 0 ? (correct/total)*100 : 0) + '%; background:' + (total > 0 && (correct/total) >= 0.7 ? '#2e7d32' : '#c62828') + '"></div></div></div>';
+        list.insertAdjacentHTML('beforeend', progressHtml);
+    }
 
-        // ==================== CARREGAR QUESTÃO ====================
-        function carregarQuestao(index) {
-            if (index < 0) index = 0;
-            if (index >= questions.length) index = questions.length - 1;
-            
-            currentQuestionIndex = index;
-            const q = questions[index];
-            
-            document.getElementById('questionCounter').textContent = 'Questão ' + (index+1) + '/' + questions.length;
-            document.getElementById('studentCounter').textContent = 'Questão ' + (index+1) + '/' + questions.length;
-            
-            const letras = ['A', 'B', 'C', 'D'];
-            
-            // Painel Professor
-            document.getElementById('currentQuestion').textContent = q.text;
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-            
-            q.options.forEach(function(opt, idx) {
-                const div = document.createElement('div');
-                div.className = 'option';
-                div.innerHTML = '<input type="radio" name="professorOption" value="' + idx + '" id="profOpt' + idx + '"><label for="profOpt' + idx + '"><strong>' + letras[idx] + '.</strong> ' + opt + '</label>';
-                optionsContainer.appendChild(div);
-            });
-            
-            // Painel Aluno
-            document.getElementById('studentQuestionText').textContent = q.text;
-            const studentOptions = document.getElementById('studentOptions');
-            studentOptions.innerHTML = '';
-            
-            // Verificar se o aluno já votou nesta questão
-            var jaVotou = studentVotes[q.id] && studentVotes[q.id].length > 0;
-            var votoAluno = jaVotou ? studentVotes[q.id][0] : -1;
-            
-            q.options.forEach(function(opt, idx) {
-                var div = document.createElement('div');
-                var className = 'option';
-                
-                // Destacar se já votou
-                if (jaVotou && idx === votoAluno) {
-                    className += idx === q.correct ? ' votada' : ' votada-errada';
+    function atualizarResultadosAluno(){
+        var q = questions[currentQuestionIndex];
+        var votesData = votes[q.id];
+        var total = votesData.total || 0;
+        var correctIndex = q.correct;
+        
+        var correct = 0;
+        if(studentVotes[q.id]){
+            for(var i=0;i<studentVotes[q.id].length;i++){
+                if(studentVotes[q.id][i] === correctIndex){
+                    correct++;
                 }
-                
-                div.className = className;
-                var checked = (jaVotou && idx === votoAluno) ? 'checked' : '';
-                var disabled = jaVotou ? 'disabled' : '';
-                var emoji = '';
-                if (jaVotou && idx === votoAluno) {
-                    emoji = idx === q.correct ? ' ✅' : ' ❌';
-                }
-                
-                div.innerHTML = '<input type="radio" name="studentOption" value="' + idx + '" id="studOpt' + idx + '" ' + checked + ' ' + disabled + '><label for="studOpt' + idx + '"><strong>' + letras[idx] + '.</strong> ' + opt + '</label>' + emoji;
-                studentOptions.appendChild(div);
-            });
-            
-            var msgEl = document.getElementById('voteMessage');
-            msgEl.style.display = 'none';
-            msgEl.className = '';
-            
-            // Atualizar botão de voto
-            var voteBtn = document.getElementById('voteBtn');
-            if (jaVotou) {
-                voteBtn.disabled = true;
-                mostrarMensagem('✅ Você já votou nesta questão!', 'alert-success');
-            } else {
-                voteBtn.disabled = false;
             }
+        }
+        
+        document.getElementById('studentTotalVotes').textContent = total;
+        document.getElementById('studentAccuracy').textContent = total > 0 ? Math.round((correct/total)*100) + '%' : '0%';
+        
+        var list = document.getElementById('studentResultsList');
+        list.innerHTML = '';
+        var letras = ['A','B','C','D'];
+        
+        for(var i=0;i<q.options.length;i++){
+            var count = votesData[i] || 0;
+            var pct = total > 0 ? Math.round((count/total)*100) : 0;
             
-            document.getElementById('nextBtn').disabled = false;
+            var div = document.createElement('div');
+            div.className = 'result-item-aluno';
+            div.innerHTML = '<span class="label"><strong>' + letras[i] + '.</strong> ' + q.options[i] + '</span><span class="value">' + count + ' votos (' + pct + '%)</span>';
+            list.appendChild(div);
+        }
+    }
+
+    // ============================================================
+    // PROFESSOR - PRÓXIMA QUESTÃO
+    // ============================================================
+    function proximaQuestaoProfessor(){
+        if(currentQuestionIndex < questions.length - 1){
+            currentQuestionIndex++;
+            carregarQuestao(currentQuestionIndex);
+            document.getElementById('voteBtn').disabled = false;
+            document.getElementById('voteMessage').style.display = 'none';
+        }else{
+            alert('🎉 Parabéns! Você completou todas as questões!');
+        }
+    }
+
+    // ============================================================
+    // REINICIAR TUDO
+    // ============================================================
+    function reiniciarTudo(){
+        if(!professorLogado){
+            alert('🔒 Apenas o professor pode reiniciar as enquetes!');
+            return;
+        }
+        if(confirm('⚠️ Tem certeza que deseja reiniciar TODOS os votos?')){
+            pontuacaoAluno = {acertos:0, totalRespondidas:0};
+            studentVotes = {};
+            votes = {};
+            inicializarVotos();
+            salvarDados('studentVotes', studentVotes);
+            salvarPontuacao();
+            currentQuestionIndex = 0;
+            carregarQuestao(0);
+            document.getElementById('voteBtn').disabled = false;
+            document.getElementById('voteMessage').style.display = 'none';
             document.getElementById('resultsPanel').classList.add('hidden');
             showingResults = false;
             document.getElementById('showResultsBtn').textContent = '📊 Mostrar Resultados';
-            
-            atualizarResultadosAluno();
-            if (professorLogado) {
-                atualizarResultadosProfessor();
-            }
+            atualizarPontuacao();
+            document.getElementById('feedbackVoto').style.display = 'none';
+            alert('✅ Tudo foi reiniciado!');
         }
+    }
 
-        // ==================== NAVEGAÇÃO DO ALUNO ====================
-        function proximaQuestaoAluno() {
-            if (currentQuestionIndex < questions.length - 1) {
-                carregarQuestao(currentQuestionIndex + 1);
-            } else {
-                alert('🎉 Você já está na última questão!');
-            }
-        }
-
-        function questaoAnterior() {
-            if (currentQuestionIndex > 0) {
-                carregarQuestao(currentQuestionIndex - 1);
-            } else {
-                alert('📌 Você já está na primeira questão!');
-            }
-        }
-
-        // ==================== VOTAÇÃO ====================
-        function votar() {
-            var q = questions[currentQuestionIndex];
-            var selected = document.querySelector('input[name="studentOption"]:checked');
-            
-            if (!selected) {
-                mostrarMensagem('⚠️ Selecione uma alternativa antes de votar!', 'alert-warning');
-                return;
-            }
-            
-            var optionIndex = parseInt(selected.value);
-            
-            if (studentVotes[q.id] && studentVotes[q.id].length > 0) {
-                mostrarMensagem('⚠️ Você já votou nesta questão!', 'alert-warning');
-                return;
-            }
-            
-            if (!studentVotes[q.id]) {
-                studentVotes[q.id] = [];
-            }
-            studentVotes[q.id].push(optionIndex);
-            
-            votes[q.id].total += 1;
-            votes[q.id][optionIndex] += 1;
-            
-            var letras = ['A', 'B', 'C', 'D'];
-            var acertou = optionIndex === q.correct;
-            mostrarMensagem(
-                (acertou ? '✅' : '❌') + ' Voto registrado! Você escolheu: ' + letras[optionIndex] + (acertou ? ' (Acertou!)' : ' (Errou!)'),
-                acertou ? 'alert-success' : 'alert-danger'
-            );
-            
-            document.getElementById('voteBtn').disabled = true;
-            
-            // Recarregar a questão para mostrar o resultado visual
-            setTimeout(function() {
-                carregarQuestao(currentQuestionIndex);
-            }, 500);
-            
-            if (showingResults && professorLogado) {
-                atualizarResultadosProfessor();
-            }
-            
-            atualizarResultadosAluno();
-        }
-
-        function mostrarMensagem(msg, className) {
-            var el = document.getElementById('voteMessage');
-            el.textContent = msg;
-            el.className = className;
-            el.style.display = 'block';
-        }
-
-        // ==================== RESULTADOS ====================
-        function toggleResults() {
-            if (!professorLogado) {
-                alert('🔒 Faça login como professor para ver os resultados completos!');
-                return;
-            }
-            
-            showingResults = !showingResults;
-            var panel = document.getElementById('resultsPanel');
-            
-            if (showingResults) {
-                panel.classList.remove('hidden');
-                atualizarResultadosProfessor();
-                document.getElementById('showResultsBtn').textContent = '🔒 Fechar Resultados';
-            } else {
-                panel.classList.add('hidden');
-                document.getElementById('showResultsBtn').textContent = '📊 Mostrar Resultados';
-            }
-        }
-
-        function atualizarResultadosProfessor() {
-            var q = questions[currentQuestionIndex];
-            var votesData = votes[q.id];
-            var total = votesData.total || 0;
-            var correctIndex = q.correct;
-            
-            var correct = 0;
-            var wrong = 0;
-            
-            if (studentVotes[q.id]) {
-                studentVotes[q.id].forEach(function(vote) {
-                    if (vote === correctIndex) {
-                        correct++;
-                    } else {
-                        wrong++;
-                    }
-                });
-            }
-            
-            document.getElementById('totalVotes').textContent = total;
-            document.getElementById('correctCount').textContent = correct;
-            document.getElementById('wrongCount').textContent = wrong;
-            document.getElementById('accuracy').textContent = total > 0 ? Math.round((correct/total)*100) + '%' : '0%';
-            
-            var list = document.getElementById('resultsList');
-            list.innerHTML = '';
-            
-            var letras = ['A', 'B', 'C', 'D'];
-            q.options.forEach(function(opt, idx) {
-                var count = votesData[idx] || 0;
-                var pct = total > 0 ? Math.round((count/total)*100) : 0;
-                var isCorrect = idx === correctIndex;
-                
-                var div = document.createElement('div');
-                div.className = 'result-item ' + (isCorrect ? 'correct' : '');
-                div.innerHTML = '<span class="label">' + (isCorrect ? '✅' : '') + ' <strong>' + letras[idx] + '.</strong> ' + opt + '</span><span class="value">' + count + ' votos (' + pct + '%)</span>';
-                list.appendChild(div);
-            });
-            
-            var progressHtml = '<div class="progress"><div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>📌 Gabarito: Alternativa <strong>' + letras[correctIndex] + '</strong></span><span>✅ ' + correct + ' acertos</span></div><div class="progress-bar"><div class="fill" style="width: ' + (total > 0 ? (correct/total)*100 : 0) + '%; background: ' + (total > 0 && (correct/total) >= 0.7 ? '#2e7d32' : '#c62828') + '"></div></div></div>';
-            list.insertAdjacentHTML('beforeend', progressHtml);
-        }
-
-        function atualizarResultadosAluno() {
-            var q = questions[currentQuestionIndex];
-            var votesData = votes[q.id];
-            var total = votesData.total || 0;
-            var correctIndex = q.correct;
-            
-            var correct = 0;
-            
-            if (studentVotes[q.id]) {
-                studentVotes[q.id].forEach(function(vote) {
-                    if (vote === correctIndex) {
-                        correct++;
-                    }
-                });
-            }
-            
-            document.getElementById('studentTotalVotes').textContent = total;
-            document.getElementById('studentAccuracy').textContent = total > 0 ? Math.round((correct/total)*100) + '%' : '0%';
-            
-            var list = document.getElementById('studentResultsList');
-            list.innerHTML = '';
-            
-            var letras = ['A', 'B', 'C', 'D'];
-            q.options.forEach(function(opt, idx) {
-                var count = votesData[idx] || 0;
-                var pct = total > 0 ? Math.round((count/total)*100) : 0;
-                var isCorrect = idx === correctIndex;
-                
-                var div = document.createElement('div');
-                div.className = 'result-item ' + (isCorrect ? 'correct' : '');
-                div.innerHTML = '<span class="label">' + (isCorrect ? '✅' : '') + ' <strong>' + letras[idx] + '.</strong> ' + opt + '</span><span class="value">' + count + ' votos (' + pct + '%)</span>';
-                list.appendChild(div);
-            });
-        }
-
-        // ==================== PRÓXIMA QUESTÃO (PROFESSOR
+    // ============================================================
+    // INICIAR
+    // ============================================================
+    window.onload = init;
+    </script>
+</body>
+</html>
